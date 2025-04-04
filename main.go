@@ -16,6 +16,14 @@ func main() {
 		log.Fatalf("Error reading commits: %v", err)
 	}
 
+	validator := services.NewCommitValidator()
+	for _, commit := range commits {
+		if err := validator.Validate(commit, false); err != nil {
+			log.Printf("Invalid commit: %v", err)
+			continue
+		}
+	}
+
 	scorer := services.NewActivityScorer()
 	ranker := services.NewRepositoryRanker()
 	ranking := ranker.Rank(commits, scorer)
