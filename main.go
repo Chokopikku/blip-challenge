@@ -7,7 +7,9 @@ import (
 )
 
 func main() {
-	logger, err := utils.NewLogger("app.log")
+	config := utils.LoadConfig()
+
+	logger, err := utils.NewLogger(config.LogFilePath)
 	if err != nil {
 		fmt.Printf("Failed to initialize logger: %v\n", err)
 		return
@@ -35,7 +37,11 @@ func main() {
 
 	logger.Info("Data validation completed")
 
-	scorer := services.NewActivityScorer()
+	scorer := services.NewActivityScorer(
+		config.WeightCommits,
+		config.WeightFiles,
+		config.WeightLines,
+	)
 	ranker := services.NewRepositoryRanker()
 	ranking := ranker.Rank(commits, scorer)
 
