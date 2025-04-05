@@ -24,7 +24,7 @@ Two scoring strategies are provided:
 - **Basic Strategy**: Simply sums up the commit score using the above formula without any adjustments.
 - **User-Weighted Strategy**: Adjusts the score by factoring in the number of unique users for a repository. The formula is:
 ```
-score = base_score * (1 + log(1 + unique_users))
+score = base_score * (1 + ln(1 + unique_users))
 ```
 Where `unique_users` is the count of unique contributors to the repository.
 
@@ -103,3 +103,61 @@ While the current implementation is solid and functional, there are always oppor
 - **Additional scoring strategies**: Other strategies beyond the `BasicStrategy` and `UserWeightedStrategy` could be added. For example, an approach that weighs recent commits higher than older ones.
 - **GitHub API**: For real-time analysis, we could integrate with GitHub’s API to fetch commit data dynamically, rather than relying exclusively on CSV files.
 - **File format support**: Enhance the system to handle different formats beyond CSV, such as JSON or Excel files. This would make the tool more flexible for various use cases.
+
+## Challenge - Top 10 Repositories
+
+The following are the top 10 most active repositories based on the activity score calculated using the user-weighted scoring algorithm:
+```
+[
+  {
+    "Name": "repo476",
+    "Score": 2415093.2902600914
+  },
+  {
+    "Name": "repo260",
+    "Score": 597995.492416038
+  },
+  {
+    "Name": "repo795",
+    "Score": 453072.46112738264
+  },
+  {
+    "Name": "repo920",
+    "Score": 370293.95083136455
+  },
+  {
+    "Name": "repo518",
+    "Score": 322835.74850759626
+  },
+  {
+    "Name": "repo250",
+    "Score": 257084.49746293155
+  },
+  {
+    "Name": "repo1143",
+    "Score": 218724.304079929
+  },
+  {
+    "Name": "repo161",
+    "Score": 217666.26346569046
+  },
+  {
+    "Name": "repo127",
+    "Score": 161700.36553149347
+  },
+  {
+    "Name": "repo1185",
+    "Score": 157973.80555601302
+  }
+]
+```
+
+### Formula Used to Calculate Activity Score
+The activity score for each repository is calculated based on the following formula:
+```
+score = weight_commits + (weight_files * number_of_files_changed) + (weight_lines * (additions + deletions))
+```
+Additionally, we apply **unique user weighting** (if enabled via the `-unique-users` flag) to further adjust the score based on the number of unique users involved in each repository. This adjustment is made using the following formula:
+```
+adjusted_score = base_score * (1 + ln(1 + unique_users))
+```
