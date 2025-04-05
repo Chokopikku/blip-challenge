@@ -4,6 +4,7 @@ import (
 	"chokopikku/blip-challenge/models"
 	"chokopikku/blip-challenge/services"
 	"chokopikku/blip-challenge/utils"
+	"flag"
 	"fmt"
 )
 
@@ -17,9 +18,12 @@ func main() {
 	}
 	defer logger.Close()
 
+	csvPath := flag.String("csv", "commits.csv", "Path to the commits CSV file")
+	flag.Parse()
+
 	logger.Info("Application started")
 
-	reader := services.NewCommitReader("commits.csv")
+	reader := services.NewCommitReader(*csvPath)
 	commits, err := reader.ReadCommits()
 	if err != nil {
 		logger.Error(fmt.Sprintf("Error reading commits: %v", err))
@@ -49,7 +53,7 @@ func main() {
 		config.WeightLines,
 	)
 	ranker := services.NewRepositoryRanker()
-	ranking := ranker.Rank(commits, scorer, userCounter)
+	ranking := ranker.Rank(validCommits, scorer, userCounter)
 
 	logger.Info("Ranking calculation completed")
 
