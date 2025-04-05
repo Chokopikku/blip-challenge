@@ -15,7 +15,7 @@ func (s *BasicStrategy) Score(repo string, baseScore float64, _ *UserCounter) fl
 	return baseScore
 }
 
-// UserWeightedStrategy uses the formula: base_score*(1 + log(1 + unique_users))
+// UserWeightedStrategy uses the formula: base_score*(1 + ln(1 + unique_users))
 type UserWeightedStrategy struct{}
 
 func (s *UserWeightedStrategy) Score(repo string, baseScore float64, userCounter *UserCounter) float64 {

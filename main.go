@@ -18,8 +18,8 @@ func main() {
 	}
 	defer logger.Close()
 
-	csvPath := flag.String("csv", "commits.csv", "Path to the commits CSV file")
-	uniqueUsers := flag.Bool("unique-users", false, "Apply unique user weighting in activity score")
+	csvPath := flag.String("csv", "commits.csv", "Relative path to the CSV file containing commit data.")
+	userWeighted := flag.Bool("userWeighted", false, "Defines whether to use the `basic` or `user-weighted` strategy (optional, default is `basic`).")
 	flag.Parse()
 
 	logger.Info("Application started")
@@ -55,7 +55,7 @@ func main() {
 	)
 	ranker := services.NewRepositoryRanker()
 	var strategy services.ScoringStrategy
-	if *uniqueUsers {
+	if *userWeighted {
 		logger.Info("Using user-weighted activity score strategy")
 		strategy = &services.UserWeightedStrategy{}
 	} else {
