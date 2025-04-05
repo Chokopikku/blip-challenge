@@ -59,5 +59,11 @@ func main() {
 		logger.Debug(fmt.Sprintf("%d. %s - Activity Score: %.2f\n", i+1, repo.Name, repo.Score))
 	}
 
+	if err := utils.ExportRankingAsJSON(ranking, config.RankingFilePath); err != nil {
+		logger.Error(fmt.Sprintf("Failed to export rankings: %v", err))
+	} else {
+		logger.Info(fmt.Sprintf("Rankings exported to %s", config.RankingFilePath))
+	}
+
 	logger.Info("Application finished")
 }

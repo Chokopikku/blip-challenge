@@ -8,20 +8,22 @@ import (
 )
 
 type Config struct {
-	LogFilePath   string
-	WeightCommits float64
-	WeightFiles   float64
-	WeightLines   float64
+	LogFilePath     string
+	RankingFilePath string
+	WeightCommits   float64
+	WeightFiles     float64
+	WeightLines     float64
 }
 
 func LoadConfig() *Config {
 	_ = godotenv.Load(".env")
 
 	return &Config{
-		LogFilePath:   getEnv("LOG_FILE", "app.log"),
-		WeightCommits: getEnvAsFloat("WEIGHT_COMMITS", 1.0),
-		WeightFiles:   getEnvAsFloat("WEIGHT_FILES", 0.4),
-		WeightLines:   getEnvAsFloat("WEIGHT_LINES", 0.2),
+		LogFilePath:     getEnv("LOG_FILE", "app.log"),
+		RankingFilePath: getEnv("RANKING_FILE", "ranking.json"),
+		WeightCommits:   getEnvAsFloat("WEIGHT_COMMITS", 1.0),
+		WeightFiles:     getEnvAsFloat("WEIGHT_FILES", 0.4),
+		WeightLines:     getEnvAsFloat("WEIGHT_LINES", 0.2),
 	}
 }
 
