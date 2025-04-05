@@ -22,5 +22,3 @@ func (s *ActivityScorer) Calculate(commit models.Commit) float64 {
 		s.weightFiles*float64(commit.Files) +
 		s.weightLines*float64(commit.Additions+commit.Deletions)
 }
-
-// TODO add username count to formula
