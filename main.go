@@ -1,6 +1,7 @@
 package main
 
 import (
+	"chokopikku/blip-challenge/models"
 	"chokopikku/blip-challenge/services"
 	"chokopikku/blip-challenge/utils"
 	"fmt"
@@ -28,11 +29,16 @@ func main() {
 	logger.Info("Data reading completed")
 
 	validator := services.NewCommitValidator()
+	userCounter := services.NewUserCounter()
+
+	var validCommits []models.Commit
 	for _, commit := range commits {
 		if err := validator.Validate(commit, false); err != nil {
 			logger.Warn(fmt.Sprintf("Invalid commit: %v", err))
 			continue
 		}
+		validCommits = append(validCommits, commit)
+		userCounter.Add(commit)
 	}
 
 	logger.Info("Data validation completed")
@@ -43,7 +49,7 @@ func main() {
 		config.WeightLines,
 	)
 	ranker := services.NewRepositoryRanker()
-	ranking := ranker.Rank(commits, scorer)
+	ranking := ranker.Rank(commits, scorer, userCounter)
 
 	logger.Info("Ranking calculation completed")
 

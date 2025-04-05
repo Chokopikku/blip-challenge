@@ -2,6 +2,7 @@ package services
 
 import (
 	"chokopikku/blip-challenge/models"
+	"math"
 	"sort"
 )
 
@@ -12,7 +13,7 @@ func NewRepositoryRanker() *RepositoryRanker {
 	return &RepositoryRanker{}
 }
 
-func (r *RepositoryRanker) Rank(commits []models.Commit, scorer *ActivityScorer) []models.RepositoryScore {
+func (r *RepositoryRanker) Rank(commits []models.Commit, scorer *ActivityScorer, userTracker *UserCounter) []models.RepositoryScore {
 	repoScores := make(map[string]float64)
 
 	for _, commit := range commits {
@@ -22,7 +23,10 @@ func (r *RepositoryRanker) Rank(commits []models.Commit, scorer *ActivityScorer)
 
 	var ranking []models.RepositoryScore
 	for repo, score := range repoScores {
-		ranking = append(ranking, models.RepositoryScore{Name: repo, Score: score})
+		uniqueUsers := userTracker.GetUniqueUserCount(repo)
+		finalScore := score * (1 + math.Log(1+float64(uniqueUsers)))
+
+		ranking = append(ranking, models.RepositoryScore{Name: repo, Score: finalScore})
 	}
 
 	sort.Slice(ranking, func(i, j int) bool {

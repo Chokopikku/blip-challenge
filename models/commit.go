@@ -15,3 +15,8 @@ type RepositoryScore struct {
 	Name  string
 	Score float64
 }
+
+/*
+Fields are aligned based on their size.
+The compiler will not add memory padding between them.
+*/
